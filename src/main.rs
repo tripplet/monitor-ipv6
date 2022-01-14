@@ -2,7 +2,7 @@
 
 use clap::Parser;
 use get_if_addrs::{get_if_addrs, IfAddr, Interface};
-use log::{debug, info, error};
+use log::{debug, error, info};
 
 use std::process::Command;
 use std::str::FromStr;
@@ -37,7 +37,7 @@ fn main() {
         let global_v6_addresses = get_global_v6_addresses(&cfg.interface);
 
         if let Err(err) = global_v6_addresses {
-            error!("Error getting interface info: {}", err);
+            error!("Error getting interface info: {err}");
         } else if let Ok(addresses) = global_v6_addresses {
             if addresses.is_empty() {
                 let status = Command::new("/usr/bin/networkctl")
@@ -45,16 +45,20 @@ fn main() {
                     .arg(&cfg.interface)
                     .status();
 
-                info!("No global ipv6 address found, reconfiguring {}", match status {
-                    Err(err) => format!("failed: {}", err),
-                    Ok(exit_status) if exit_status.success() => format!("successful"),
-                    Ok(exit_status) => format!("not successful, return code: {:?}", exit_status.code())
-                });
+                info!(
+                    "No global ipv6 address found, reconfiguring {}",
+                    match status {
+                        Err(err) => format!("failed: {}", err),
+                        Ok(exit_status) if exit_status.success() => "successful".to_string(),
+                        Ok(exit_status) =>
+                            format!("not successful, return code: {:?}", exit_status.code()),
+                    }
+                );
 
                 thread::sleep(Duration::from_secs(5));
                 continue;
             } else {
-                debug!("Global ipv6 addresses: {:?}", addresses);
+                debug!("Global ipv6 addresses: {addresses:?}");
             }
         }
 
