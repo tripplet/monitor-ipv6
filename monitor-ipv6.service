@@ -1,0 +1,17 @@
+[Unit]
+Description=Monitor ipv6 addresses
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Nice=19
+IOSchedulingClass=2
+IOSchedulingPriority=7
+EnvironmentFile=/etc/conf.d/monitor-ipv6
+ProtectSystem=strict
+ProtectHome=true
+ExecStart=/usr/bin/monitor-ipv6
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
