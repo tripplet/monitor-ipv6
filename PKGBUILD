@@ -1,6 +1,6 @@
 pkgname=monitor-ipv6
 pkgver=1.1.0
-pkgrel=3
+pkgrel=1
 pkgdesc='Monitor interface for ipv6 address'
 arch=('x86_64' 'armv7h' 'aarch64')
 depends=()
