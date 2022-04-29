@@ -1,11 +1,11 @@
 #![feature(ip)]
 
 use clap::Parser;
+use dbus::blocking::Connection;
 use get_if_addrs::{get_if_addrs, IfAddr, Interface};
 use log::{debug, error, info};
 
 use std::cmp;
-use std::process::Command;
 use std::str::FromStr;
 use std::thread;
 use std::time::Duration;
@@ -54,18 +54,11 @@ fn main() {
             error!("Error getting interface info: {err}");
         } else if let Ok(addresses) = global_v6_addresses {
             if addresses.is_empty() {
-                let status = Command::new("/usr/bin/networkctl")
-                    .arg("reconfigure")
-                    .arg(&cfg.interface)
-                    .status();
-
                 info!(
                     "No global ipv6 address found, reconfiguring {}",
-                    match status {
+                    match reconfigure_interface(&cfg.interface) {
                         Err(err) => format!("failed: {}", err),
-                        Ok(exit_status) if exit_status.success() => "successful".to_string(),
-                        Ok(exit_status) =>
-                            format!("not successful, return code: {:?}", exit_status.code()),
+                        Ok(_) => "successful".to_string(),
                     }
                 );
 
@@ -82,6 +75,27 @@ fn main() {
 
         thread::sleep(Duration::from_secs(cfg.intervall.into()));
     }
+}
+
+fn reconfigure_interface(interface: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let conn = Connection::new_system()?;
+    let proxy = conn.with_proxy(
+        "org.freedesktop.network1",
+        "/org/freedesktop/network1",
+        Duration::from_millis(5000),
+    );
+
+    let (index,): (i32,) = proxy.method_call(
+        "org.freedesktop.network1.Manager",
+        "GetLinkByName",
+        (interface,),
+    )?;
+    
+    Ok(proxy.method_call(
+        "org.freedesktop.network1.Manager",
+        "ReconfigureLink",
+        (index,),
+    )?)
 }
 
 fn get_global_v6_addresses(interface: &str) -> Result<Vec<std::net::Ipv6Addr>, std::io::Error> {

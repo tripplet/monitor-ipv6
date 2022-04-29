@@ -1,6 +1,7 @@
 [Unit]
 Description=Monitor ipv6 addresses
-After=network-online.target
+Requires=dbus.socket
+After=network-online.target dbus.socket
 Wants=network-online.target
 
 [Service]
