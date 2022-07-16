@@ -22,7 +22,7 @@ struct Config {
     #[clap(long, default_value = "10", env)]
     intervall: u16,
 
-    /// Intervall (in seconds) to check the interface
+    /// Set the Log level
     #[clap(long, default_value="info", parse(try_from_str = log::Level::from_str), env)]
     log_level: log::Level,
 
