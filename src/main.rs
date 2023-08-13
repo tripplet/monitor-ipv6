@@ -6,7 +6,6 @@ use get_if_addrs::{get_if_addrs, IfAddr, Interface};
 use log::{debug, error, info};
 
 use std::cmp;
-use std::str::FromStr;
 use std::thread;
 use std::time::Duration;
 
@@ -23,7 +22,7 @@ struct Config {
     intervall: u16,
 
     /// Set the Log level
-    #[clap(long, default_value="info", parse(try_from_str = log::Level::from_str), env)]
+    #[clap(long, default_value="info", env)]
     log_level: log::Level,
 
     /// Time to wait before first check (in seconds)

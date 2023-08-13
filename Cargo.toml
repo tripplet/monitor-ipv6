@@ -1,14 +1,14 @@
 [package]
 name = "monitor-ipv6"
-version = "1.2.1"
+version = "1.2.2"
 edition = "2021"
 
 [dependencies]
 log = "0.4"
-simple_logger = "1.16"
+simple_logger = "4.2"
 get_if_addrs = "0.5"
-clap = { version = "3.1", features = ["derive", "env"] }
-dbus = "^0.9"
+clap = { version = "4.3", features = ["derive", "env"] }
+dbus = "0.9"
 
 [profile.release]
 opt-level = 'z' # Optimize for size.
