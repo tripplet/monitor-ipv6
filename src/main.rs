@@ -1,13 +1,11 @@
 #![feature(ip)]
 
+use std::{cmp, thread, time::Duration};
+
 use clap::Parser;
 use dbus::blocking::Connection;
 use get_if_addrs::{get_if_addrs, IfAddr, Interface};
 use log::{debug, error, info};
-
-use std::cmp;
-use std::thread;
-use std::time::Duration;
 
 // The main config
 #[derive(Debug, Parser)]
@@ -22,7 +20,7 @@ struct Config {
     intervall: u16,
 
     /// Set the Log level
-    #[clap(long, default_value="info", env)]
+    #[clap(long, default_value = "info", env)]
     log_level: log::Level,
 
     /// Time to wait before first check (in seconds)
@@ -89,7 +87,7 @@ fn reconfigure_interface(interface: &str) -> Result<(), Box<dyn std::error::Erro
         "GetLinkByName",
         (interface,),
     )?;
-    
+
     Ok(proxy.method_call(
         "org.freedesktop.network1.Manager",
         "ReconfigureLink",

@@ -1,5 +1,5 @@
 pkgname=monitor-ipv6
-pkgver=1.2.3
+pkgver=1.2.4
 pkgrel=1
 pkgdesc='Monitor interface for ipv6 address'
 arch=('x86_64' 'armv7h' 'aarch64')

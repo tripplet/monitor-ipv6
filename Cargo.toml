@@ -1,13 +1,13 @@
 [package]
 name = "monitor-ipv6"
-version = "1.2.3"
+version = "1.2.4"
 edition = "2021"
 
 [dependencies]
 log = "0.4.20"
-simple_logger = "4.3.3"
+simple_logger = "5.0.0"
 get_if_addrs = "0.5.3"
-clap = { version = "4.4.12", features = ["derive", "env"] }
+clap = { version = "4.5.15", features = ["derive", "env"] }
 dbus = "0.9.7"
 
 [profile.release]
